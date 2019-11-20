@@ -8,10 +8,15 @@ def make(column, row):
     
     return game
 
-def print_game(print_game):
+def print_game(game):
     for row in game:
-        print(row['meetLine1'])
-        print(row['meetLine2'])
+        for column in range(0, 20):
+            print('I',end='')
+            if row['meetLine1'] == column+1:
+                print('-', end='')
+            else:
+                print(' ', end='')
+        print(' ')
 
 def run(game, n):
     
@@ -70,7 +75,7 @@ def test_make_21():
 
 def test_make_820():
     game = make(8, 20)
-    print(game)
+    print_game(game)
     assert game[0]['meetLine1'] == 1
     assert game[0]['meetLine2'] == 2
     assert game[1]['meetLine1'] == 1
@@ -79,19 +84,20 @@ def test_make_820():
     assert run(game, 2) == 2
 
 if __name__=='__main__':
-    data = []
-    count_11 = 0
-    for x in range(0,1000):
-        game = make(8,20)
-        for i in range (1,9):
-            result = run(game,i)
-            #print('선택:',i, '결과:', result)
-            data.append({'선택' : i, '결과' : result})
-        
-            if data[8*x+(i-1)]['선택'] == 1:
-                if result == 3:
-                    #print(i,result)
-                    count_11 += 1
-    print(count_11)
+    for row_count in range (20, 200):
+        data = []
+        count_11 = 0
+        for x in range(0,1000):
+            game = make(8,row_count)
+            for i in range (1,9):
+                result = run(game,i)
+                #print('선택:',i, '결과:', result)
+                data.append({'선택' : i, '결과' : result})
+            
+                if data[8*x+(i-1)]['선택'] == 1:
+                    if result == 3:
+                        #print(i,result)
+                        count_11 += 1
+        print(row_count, ' ', count_11, ' ', count_11/1000*100)
             
     
