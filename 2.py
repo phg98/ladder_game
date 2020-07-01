@@ -8,6 +8,25 @@ def make(column, row):
     
     return game
 
+def make2(column, row):
+    game = []
+    # 모든 컬럼이 연결이 되도록 기본 로우를 할당한다.
+    if row < column-1:
+        row = column-1
+    for i in range(1, column):
+        game.append({'meetLine1' : i, 'meetLine2' : i+1})
+    row -= column-1
+
+    # 나머지 로우를 할당한다.
+    for i in range (0,row):
+        x = random.randrange(1,column)
+        game.append({'meetLine1' : x, 'meetLine2' : x+1})
+
+    # 앞부분 순서가 고정이어서 섞어준다.
+    random.shuffle(game)
+    
+    return game
+
 def print_game(game):
     for row in game:
         for column in range(0, 20):
@@ -84,20 +103,28 @@ def test_make_820():
     assert run(game, 2) == 2
 
 if __name__=='__main__':
-    for row_count in range (20, 200):
+    column = 8
+    for row_count in range (column-1, 50):
         data = []
+        results = [[0 for x in range(column+1)] for y in range(column+1)] 
+        results_percent = [[0 for x in range(column+1)] for y in range(column+1)] 
         count_11 = 0
-        for x in range(0,1000):
-            game = make(8,row_count)
-            for i in range (1,9):
+        iteration = 10000
+        for x in range(0,iteration):
+            game = make2(column,row_count)
+            for i in range (1,column+1):
                 result = run(game,i)
                 #print('선택:',i, '결과:', result)
-                data.append({'선택' : i, '결과' : result})
+                # data.append({'선택' : i, '결과' : result})
             
-                if data[8*x+(i-1)]['선택'] == 1:
-                    if result == 3:
-                        #print(i,result)
-                        count_11 += 1
-        print(row_count, ' ', count_11, ' ', count_11/1000*100)
-            
-    
+                # if data[8*x+(i-1)]['선택'] == 1:
+                #     if result == 3:
+                #         #print(i,result)
+                #         count_11 += 1
+
+                results[i][result] += 1
+        results_percent = [[int(x/iteration*100) for x in y] for y in results]
+
+        print(row_count, results_percent)
+        #print(row_count, results, results_percent)
+       # print(row_count, ' ', count_11, ' ', count_11/1000*100)
